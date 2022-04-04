@@ -1,0 +1,13 @@
+/**
+ Module initialization function
+ @param whatsappInterface WhatsApp Client
+ @param config Module configuration
+**/
+const init = async (whatsappInterface, config) => {
+}
+
+module.exports = {
+    // Info object contains metadata about your plugin. 
+    // IMPORTANT! Match module name with config key in config.js!
+    init, info: {name: 'my-plugin', version: 1.0}
+}
