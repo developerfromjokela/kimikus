@@ -3,6 +3,9 @@ Multifunctional WhatsApp bot
 
 Kimikus is built on modules, which can be disabled and enabled as needs arise and demands change.
 
+### Requirements:
+- Node 12 and NPM
+
 ### Built-in plugins
 ---
 
@@ -61,3 +64,9 @@ On servers, GUI may not be available, and terminal QR code must be used instead.
 - `headless`: Run chromium/chrome headless or not (true/false)
 - `adminGroups`: "Define admin users or groups. WhatsApp User's ID should be put together according to this scheme: `<countrycode><num>@c.us`. Example: `358444444444@c.us` for number +358 44 444 4444. Once you get admin access, send kimikus direct message  (`!admin listgroups`) to get groups' IDs.
 
+### Running under docker
+---
+Kimikus has included docker compose file and Dockerfile.
+
+One may use Dockerfile by building the image and starting.
+With docker-compose build and docker-compose up, you can get kimikus running with config volume mounted.
