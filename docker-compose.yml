@@ -7,6 +7,4 @@ services:
     user: "chrome:chrome"
     volumes:
       - ./config/:/usr/src/app/config:rw
-    depends_on:
-      - db
     restart: unless-stopped
