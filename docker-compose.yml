@@ -1,0 +1,12 @@
+version: "2"
+
+services:
+  kimikus:
+    build: ./
+    image: kimikus
+    user: "chrome:chrome"
+    volumes:
+      - ./suppis_config/:/usr/src/app/config:rw
+    depends_on:
+      - db
+    restart: unless-stopped

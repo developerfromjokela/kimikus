@@ -1,0 +1,5 @@
+config
+modules/custom/*
+.idea
+# Project exclude paths
+/node_modules/
