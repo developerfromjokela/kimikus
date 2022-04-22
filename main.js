@@ -1,5 +1,4 @@
-const fs = require('fs');
-const { Client } = require('whatsapp-web.js');
+const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
 process
@@ -11,13 +10,10 @@ process
     });
 
 
-const SESSION_FILE_PATH = './config/session.json';
-let sessionCfg;
-if (fs.existsSync(SESSION_FILE_PATH)) {
-    sessionCfg = require(SESSION_FILE_PATH);
-}
+const SESSION_FILE_DIR = __dirname+'/config/';
+
 const config = require('./config/config');
-const client = new Client({ puppeteer: { headless: config.headless, ...config.puppeteer}, session: sessionCfg });
+const client = new Client({ puppeteer: { headless: config.headless, ...config.puppeteer}, authStrategy: new LocalAuth({dataPath: SESSION_FILE_DIR})});
 
 const dualLog = (...log) => {
     console.log(...log);
@@ -25,9 +21,6 @@ const dualLog = (...log) => {
         client.sendMessage(i, log.map(i => i.toString()).join("\n"));
     })
 }
-
-//
-
 
 const initModules = async () => {
     dualLog("Initializing modules...");
@@ -63,12 +56,6 @@ client.on('qr', (qr) => {
 
 client.on('authenticated', (session) => {
     console.log('AUTHENTICATED', session);
-    sessionCfg=session;
-    fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
-        if (err) {
-            console.error(err);
-        }
-    });
 });
 
 client.on('auth_failure', msg => {
@@ -81,28 +68,6 @@ let lastDeviceState = undefined;
 client.on('ready', () => {
     dualLog(`*READY*\n${(new Date()).toLocaleString()}\n`);
     initModules();
-});
-
-client.on('change_battery', (batteryInfo) => {
-    // Battery percentage for attached device has changed
-    const { battery, plugged } = batteryInfo;
-    console.log(`Battery: ${battery}% - Charging? ${plugged}`);
-    if (lastDeviceState === undefined) {
-        lastDeviceState = batteryInfo;
-        return;
-    }
-    if (batteryInfo.plugged !== lastDeviceState.plugged) {
-        config.adminGroups.forEach(i => {
-            client.sendMessage(i, `*Varoitus!* Laite ${plugged === true ? 'liitettiin' : 'irrotettiin'} laturista! \nAkun varaus on ${batteryInfo.battery}`);
-        })
-        return;
-    }
-    if (batteryInfo.battery !== lastDeviceState.battery && batteryInfo.battery < 10) {
-        config.adminGroups.forEach(i => {
-            client.sendMessage(i, `!!! Akun varaus on ${batteryInfo.battery}, ja laturi ${plugged === true ? "on" : "ei ole"} kiinni`);
-        })
-    }
-    lastDeviceState = batteryInfo;
 });
 
 client.on('message', async (msg) => {
