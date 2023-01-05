@@ -1,14 +1,6 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
-process
-    .on('unhandledRejection', (reason, p) => {
-        console.error(reason, 'Unhandled Rejection at Promise', p);
-    })
-    .on('uncaughtException', err => {
-        console.error(err, 'Uncaught Exception thrown');
-    });
-
 
 const SESSION_FILE_DIR = __dirname+'/config/';
 
@@ -38,14 +30,6 @@ const initModules = async () => {
     }
 }
 
-process
-    .on('unhandledRejection', (reason, p) => {
-        console.error(reason, 'Unhandled Rejection at Promise', p);
-    })
-    .on('uncaughtException', err => {
-        console.error(err, 'Uncaught Exception thrown');
-    });
-
 
 client.on('qr', (qr) => {
     console.clear();
@@ -61,6 +45,7 @@ client.on('authenticated', (session) => {
 client.on('auth_failure', msg => {
     // Fired if session restore was unsuccessfull
     console.error('AUTHENTICATION FAILURE', msg);
+    throw new Error(msg)
 });
 
 let lastDeviceState = undefined;
