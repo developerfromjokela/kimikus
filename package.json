@@ -2,7 +2,7 @@
   "name": "kimikus",
   "description": "WhatsApp bot Kimikus is multifunctional whatsapp bot",
   "dependencies": {
-    "body-parser": "^1.20.0",
+    "body-parser": "^1.20.2",
     "express": "^4.17.3",
     "googleapis": "^109.0.0",
     "qrcode-terminal": "^0.12.0",
